@@ -280,14 +280,14 @@ func main() {
 				Name:  "port",
 				Value: "8000",
 				Usage: "port to listen on",
+				EnvVars: []string{"PORT"},
 			},
 		},
 		Action: func(cctx *cli.Context) error {
-			fmt.Printf("Serving on :%s\n", cctx.String("port"))
 			hostname, _ := os.Hostname()
 			fmt.Printf("Configure your sentry project to use this server as the DSN endpoint\n\n")
 			fmt.Printf("http://my-project-name@%s:%s/1\n\n", hostname, cctx.String("port"))
-			fmt.Printf("Note that the public key (first component) may be set to any string, we recommend using it as a project name. The project ID (the numeric trailing component) may be set to any number to disambiguate projects, as there is no built-in database that would use the project ID.")
+			fmt.Printf("Note that the public key (first component) may be set to any string, we recommend using it as a project name. The project ID (the numeric trailing component) may be set to any number to disambiguate projects, as there is no built-in database that would use the project ID.\n")
 			http.ListenAndServe(":"+cctx.String("port"), r)
 			return nil
 		},
