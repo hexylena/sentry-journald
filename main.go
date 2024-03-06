@@ -79,12 +79,20 @@ type SentryException struct {
 	Values []SentryExceptionItem `json:"values"`
 }
 
+type SentryLogEntry struct {
+	Message string   `json:"message"`
+	Params  []string `json:"params"`
+}
+
 type SentryEvent struct {
 	Message    string                 `json:"message"`
 	Level      string                 `json:"level"`
+	Logger     string                 `json:"logger"`
+	LogEntry   SentryLogEntry         `json:"logentry"`
 	Event_id   string                 `json:"event_id"`
 	Timestamp  interface{}            `json:"timestamp"`
 	Contexts   map[string]interface{} `json:"contexts"`
+	Extra      map[string]interface{} `json:"extra"`
 	Exception  SentryException        `json:"exception"`
 	Stacktrace SentryStackTrace       `json:"stacktrace"`
 	// Breadcrumbs  []SentryBreadcrumb `json:"breadcrumbs"`
@@ -169,7 +177,7 @@ func processSentryRequest(w http.ResponseWriter, r *http.Request) {
 
 	// Explicitly choosing to discard session and transaction information.
 	// User reports and events are kept.
-	if msg_type.Type == "session" || msg_type.Type == "transaction" {
+	if msg_type.Type == "session" || msg_type.Type == "transaction" || msg_type.Type == "client_report" {
 		w.Write([]byte("{}"))
 		return
 	}
@@ -206,6 +214,8 @@ func processSentryRequest(w http.ResponseWriter, r *http.Request) {
 	var message string
 	if event2.Message != "" {
 		message = event2.Message
+	} else if event2.LogEntry.Message != "" {
+		message = fmt.Sprintf("%s: %s: %s", event2.Logger, event2.LogEntry.Message, event2.LogEntry.Params)
 	} else {
 		if len(event2.Exception.Values) > 0 {
 			// Will it ever be more??
@@ -277,9 +287,9 @@ func main() {
 		Usage: "Log your sentry errors directly into your journald",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
-				Name:  "port",
-				Value: "8000",
-				Usage: "port to listen on",
+				Name:    "port",
+				Value:   "8008",
+				Usage:   "port to listen on",
 				EnvVars: []string{"PORT"},
 			},
 		},
