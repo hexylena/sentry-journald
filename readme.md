@@ -48,7 +48,7 @@ A unit file is included for your convenience.
 
 ## Comparison
 
-suckless? no this sucks more. (also we don't have torchlit walks.)
+suckless? no this sucks more. (but we don't have torchlit walks, so, tradeoffs ig.)
 
 This is intentionally pretty minimal.
 
@@ -57,12 +57,18 @@ Feature | Actual Sentry | This Rubbish
 Receives errors | ✅ | ✅
 Receives 'user messages' | ✅ | ✅
 Processes sessions/breadcrumbs | ✅ | ❌
-Aggregates & deduplicates error messages | ✅ | ❌
-Provides nice breakdowns of user/browser version/etc | ✅ | ❌
+Aggregates & deduplicates error messages | ✅ | 🤷‍♀️
+Provides nice breakdowns of user/browser version/etc | ✅ | 🤷‍♀️
 Supports attachments | ✅ | ❌
 Has something like spam measures | ✅ | ❌
 
 It's in a similar vein to [hauxir/errorpush](https://github.com/hauxir/errorpush), except instead of shoving it into a DB and asking you to write complicated SQL queries, we shove it into journald and ask you to write complicated jq/awk/sort/uniq/greps to process your data. Which is better? We may never know.
+
+## Screenshots
+
+Overview | Detail (JS) | Detail (Py)
+--- |--- | ---
+![A list of issues are shown with emoji and sparkcharts indicating their recency](./images/list.png) | ![Detail page showing a browser version breakdown](./images/detail-js.png) | ![Detail page without a browser version breakdown but other things are noted.](./images/detail-py.png)
 
 ## Did you find this useful?
 

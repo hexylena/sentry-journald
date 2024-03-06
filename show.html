@@ -24,6 +24,21 @@
 		--labels-size: 22rem;
 		--aspect-ratio: 9/1;
 	}
+	.spark {
+		border-bottom: 1px solid black
+	}
+	.spark {
+		--color: #ccf;
+	}
+
+.level-Emergency::before {content: "🔥"}
+.level-Alert::before {content: "🔥"}
+.level-Critical::before {content: "❌"}
+.level-Error::before {content: "❌"}
+.level-Warning::before {content: "⚠️"}
+.level-Notice::before {content: "ℹ️"}
+.level-Informational::before {content: "💬"}
+.level-Debug::before {content: "💬"}
 
  /* The snackbar - position it at the bottom and in the middle of the screen */
 #snackbar {
@@ -78,7 +93,7 @@
 	</header>
 	<main>
 		<hgroup>
-			<h1>{{ .Entry.GetLogLevel }}</h1>
+			<h1 class="level-{{ .Entry.GetLogLevel }}">{{ .Entry.GetLogLevel }}</h1>
 		</hgroup>
 
 	<pre>{{ .Message }}</pre>
