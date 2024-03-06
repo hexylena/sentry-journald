@@ -1,7 +1,7 @@
 # Sentry-Journald
 
 Do you like sentry's data collection, but don't want to run a complicated sentry server? Do you still want to see those cute lil error messages?
-Boy howdy do I have the 200 lines of rubbish Golang code for you!
+Boy howdy do I have the 300 lines of rubbish Golang code for you!
 
 ```
 $ journalctl -f # optionally -t sentry
@@ -45,6 +45,20 @@ Just like real sentry there is no actual authentication of the user, so, it is u
 ## systemd
 
 A unit file is included for your convenience.
+
+## Comparison
+
+This is intentionally pretty minimal.
+
+Feature | Actual Sentry | This Rubbish
+--- | --- | ---
+Receives errors | ✅ | ✅
+Receives 'user messages' | ✅ | ✅
+Processes sessions/breadcrumbs | ✅ | ❌
+Aggregates & deduplicates error messages | ✅ | ❌
+Provides nice breakdowns of user/browser version/etc | ✅ | ❌
+Supports attachments | ✅ | ❌
+Has something like spam measures | ✅ | ❌
 
 ## Did you find this useful?
 
