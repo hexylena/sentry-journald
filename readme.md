@@ -5,16 +5,16 @@ Boy howdy do I have the 200 lines of rubbish Golang code for you!
 
 ```
 $ journalctl -f # optionally -t sentry
-Mar 06 13:13:22 w-galaxy sentry[467887]: [event] (proj=nil env=production) [http://localhost:4001/test.html:38:5] [http://localhost:4001/test.html:1:1] ReferenceError: someOtherFunction is not defined
-Mar 06 13:13:51 w-galaxy sentry[467887]: [event] (proj=nil env=development) [sentry-test.py:29:0] NameError: name 'a_potentially_failing_function' is not defined
-Mar 06 13:13:51 w-galaxy sentry[467887]: [event] (proj=nil env=development) Something went wrong
+Mar 06 13:13:22 w-galaxy sentry[467887]: [event] (proj=web-demo env=production) [http://localhost:4001/test.html:38:5] [http://localhost:4001/test.html:1:1] ReferenceError: someOtherFunction is not defined
+Mar 06 13:13:51 w-galaxy sentry[467887]: [event] (proj=py-demo env=development) [sentry-test.py:29:0] NameError: name 'a_potentially_failing_function' is not defined
+Mar 06 13:13:51 w-galaxy sentry[467887]: [event] (proj=py-demo env=development) Something went wrong
 ```
 
 If you want the full data it's stuffed into additional fields in the `journald` json output.
 
 ```json
 {
-  "MESSAGE": "[event] (proj=nil env=production) [http://localhost:4001/test.html:38:5] [http://localhost:4001/test.html:1:1] ReferenceError: someOtherFunction is not defined",
+  "MESSAGE": "[event] (proj=web-demo env=production) [http://localhost:4001/test.html:38:5] [http://localhost:4001/test.html:1:1] ReferenceError: someOtherFunction is not defined",
   "MESSAGE_ID": "2b5238a100474170b7bb6bd78fc8842f",
   "PRIORITY": "3",
   "PROJECT_ID": "1",
@@ -29,31 +29,22 @@ If you want the full data it's stuffed into additional fields in the `journald` 
   "SENTRY_ENVIRONMENT": "production",
   "SENTRY_KEY": "password",
   "SENTRY_PLATFORM": "javascript",
-  "SENTRY_RELEASE": "my-project-name@2.3.12",                                                                                                                                                                       "SENTRY_SERVER_NAME": "",
+  "SENTRY_RELEASE": "my-project-name@2.3.12",                                                                                                                                                                   "SENTRY_SERVER_NAME": "",
   "SENTRY_TIMESTAMP": "1.709726111276e+09",
   "SENTRY_VERSION": "7",
   "SYSLOG_IDENTIFIER": "sentry",
 },
-{
-  "MESSAGE": "[event] (proj=nil env=development) [sentry-test.py:29:0] NameError: name 'a_potentially_failing_function' is not defined",
-  "MESSAGE_ID": "dbe9112bec734cc7b21b1f22c979f747",
-  "PRIORITY": "3",
-  "PROJECT_ID": "1",
-  "REMOTE_ADDR": "[::1]:37282",
-  "REQUEST_HEADERS": "null",
-  "REQUEST_METHOD": "POST",
-  "REQUEST_REMOTE_ADDR": "[::1]:37282",
-  "REQUEST_URL": "",
-  "SENTRY_CLIENT": "",
-  "SENTRY_CONTEXTS": "{\"character\":{\"age\":19,\"attack_type\":\"melee\",\"name\":\"Mighty Fighter\"},\"runtime\":{\"build\":\"3.11.7 (main, Dec 18 2023, 00:00:00) [GCC 13.2.1 20231011 (Red Hat 13.2.1-4)]\",\
-"name\":\"CPython\",\"version\":\"3.11.7\"},\"trace\":{\"parent_span_id\":null,\"span_id\":\"90416ef04a2ee00d\",\"trace_id\":\"6f3d1f39dad9475e80b34580e3496611\"}}",
-  "SENTRY_DIST": "myapp@0.0.1",
-  "SENTRY_ENVIRONMENT": "development",
-  "SENTRY_KEY": "",
-  "SENTRY_PLATFORM": "python",
-  "SENTRY_RELEASE": "myapp@0.0.1",
-...}
 ```
+
+## Configuration
+
+There is a `--port` flag (also available as `PORT`) to configure a port from the environment.
+
+Just like real sentry there is no actual authentication of the user, so, it is up to you to add any filtering and anti-spam/abuse you want.
+
+## systemd
+
+A unit file is included for your convenience.
 
 ## License
 

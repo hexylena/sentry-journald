@@ -1,0 +1,13 @@
+[Unit]
+Description=Logs sentry reports to journald
+After=network.target
+Wants=network-online.target
+
+[Service]
+Restart=always
+Type=simple
+ExecStart=sentry-journald
+Environment='PORT=8008'
+
+[Install]
+WantedBy=multi-user.target
