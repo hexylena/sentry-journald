@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Sentry Test Page</title>
+		<script
+			  src="https://browser.sentry-cdn.com/7.105.0/bundle.tracing.min.js"
+			  integrity="sha384-XFfw9fN0ZxeLnveKcWT/zLOcibWw9ewRfNiUu/teAuMfP4G3Oy7lLh7rN3rX2T7M"
+			  crossorigin="anonymous"
+			></script>
+
+		<script>
+		  Sentry.init({
+		    dsn: "http://password@localhost:8000/1",
+
+		    // Alternatively, use `process.env.npm_package_version` for a dynamic release version
+		    // if your build tool supports it.
+		    release: "my-project-name@2.3.12",
+		    integrations: [
+		      Sentry.browserTracingIntegration(),
+		      Sentry.replayIntegration(),
+		    ],
+
+		    // Set tracesSampleRate to 1.0 to capture 100%
+		    // of transactions for performance monitoring.
+		    // We recommend adjusting this value in production
+		    tracesSampleRate: 1,
+		    // Capture Replay for 10% of all sessions,
+		    // plus for 100% of sessions with an error
+		    replaysSessionSampleRate: 1,
+		    replaysOnErrorSampleRate: 1,
+		  });
+		</script>
+
+	</head>
+	<body>
+		<script>
+			function doesNotExist(){
+				someOtherFunction();
+			}
+		</script>
+
+
+		<button onclick="doesNotExist()">Trigger Exception</button>
+		<button onclick="throw new Error('My Error')">Throw new Error</button>
+		<button onclick="Sentry.captureMessage('My Message')">Capture Message</button>
+		<button onclick="Sentry.captureException(new Error('My Error'))">Capture Exception</button>
+		<button onclick="Sentry.captureEvent({ message: 'My Event' })">Capture Event</button>
+		<button onclick="Sentry.addBreadcrumb({ message: 'My Breadcrumb' })">Add Breadcrumb</button>
+
+	</body>
+</html>
