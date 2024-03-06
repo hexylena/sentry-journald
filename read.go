@@ -137,7 +137,6 @@ func (e LogEntry) GetMeta(attr string) map[string]float64 {
 		if k == "" {
 			continue
 		}
-		fmt.Printf("k=%s v=%s.\n", k, v)
 		results[k] = float64(v) / float64(total)
 	}
 
