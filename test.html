@@ -10,7 +10,7 @@
 
 		<script>
 		  Sentry.init({
-		    dsn: "http://web-demo@localhost:8000/1",
+		    dsn: "http://webdemo@localhost:8000/1",
 
 		    // Alternatively, use `process.env.npm_package_version` for a dynamic release version
 		    // if your build tool supports it.
@@ -45,7 +45,6 @@
 		<button onclick="Sentry.captureMessage('My Message')">Capture Message</button>
 		<button onclick="Sentry.captureException(new Error('My Error'))">Capture Exception</button>
 		<button onclick="Sentry.captureEvent({ message: 'My Event' })">Capture Event</button>
-		<button onclick="Sentry.addBreadcrumb({ message: 'My Breadcrumb' })">Add Breadcrumb</button>
 
 	</body>
 </html>
