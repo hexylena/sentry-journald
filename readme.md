@@ -46,6 +46,10 @@ Just like real sentry there is no actual authentication of the user, so, it is u
 
 A unit file is included for your convenience.
 
+## Did you find this useful?
+
+Please let me know (email, fediverse are both fine.)
+
 ## License
 
 EUPL-1.2 (it's like agpl! but european flavour.)
