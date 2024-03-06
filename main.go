@@ -54,7 +54,7 @@ func issuePage(w http.ResponseWriter, r *http.Request) {
 	entries := aggregateIdenticalMessages(string(msg_bytes), 24)
 
 	type Zzy struct {
-		Entry LogEntry
+		Entry   LogEntry
 		Message string
 	}
 

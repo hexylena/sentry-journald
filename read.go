@@ -4,8 +4,8 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"strings"
 	"sort"
+	"strings"
 	"time"
 	// "github.com/coreos/go-systemd/v22/journal"
 	"github.com/coreos/go-systemd/v22/sdjournal"
@@ -108,7 +108,7 @@ func (e LogEntry) GetBrowserMeta(attr string) map[string]float64 {
 	total := len(e.Entries)
 	results := make(map[string]float64)
 	for k, v := range browsers {
-		if k == ""  || k == " " {
+		if k == "" || k == " " {
 			continue
 		}
 		results[k] = float64(v) / float64(total)
@@ -117,7 +117,6 @@ func (e LogEntry) GetBrowserMeta(attr string) map[string]float64 {
 	fmt.Println(results)
 	return results
 }
-
 
 func (e LogEntry) GetMeta(attr string) map[string]float64 {
 	browsers := make(map[string]int)
@@ -145,8 +144,6 @@ func (e LogEntry) GetMeta(attr string) map[string]float64 {
 	return results
 }
 
-
-
 func (e LogEntry) GetCount() int {
 	return len(e.Entries)
 }
@@ -165,10 +162,10 @@ func (e LogEntry) GetHistogram12h() []float64 {
 		if hour > 11 {
 			continue
 		}
-		
-		hist[11 - hour] = hist[11 - hour] + 1
-		if hist[11 - hour] > m {
-			m = hist[11 - hour]
+
+		hist[11-hour] = hist[11-hour] + 1
+		if hist[11-hour] > m {
+			m = hist[11-hour]
 		}
 	}
 
