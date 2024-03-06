@@ -5,4 +5,4 @@ fmt:
 	go fmt
 
 serve:
-	find . -name '*.go' | entr -r go run main.go
+	find . -name '*.go' | entr -r bash -c "go build && ./sentry-journald --port 8000"

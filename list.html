@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Sentry Journald</title>
+    <link rel="stylesheet" href="https://unpkg.com/normalize.css@8.0.1/normalize.css">
+    <link rel="stylesheet" href="https://unpkg.com/concrete.css@2.0.3/concrete.css">
+    <link rel="stylesheet" href="https://unpkg.com/charts.css/dist/charts.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+	main, header {
+		margin: auto;
+		max-width: 80%;
+		padding: 0 1rem;
+		width: 100%;
+	}
+	header {
+		padding: 3rem 0;
+	}
+	pre {
+		white-space: pre-wrap;
+	}
+	#meta {
+		--labels-size: 22rem;
+		--aspect-ratio: 3/1;
+	}
+	.spark {
+		border-bottom: 1px solid black
+	}
+	.spark {
+		--color: #ccf;
+	}
+
+.level-Emergency::before {content: "🔥"}
+.level-Alert::before {content: "🔥"}
+.level-Critical::before {content: "❌"}
+.level-Error::before {content: "❌"}
+.level-Warning::before {content: "⚠️"}
+.level-Notice::before {content: "ℹ️"}
+.level-Informational::before {content: "💬"}
+.level-Debug::before {content: "💬"}
+
+    </style>
+  </head>
+  <body>
+	<header>
+		<a href="/">Sentry-Journald</a>
+	</header>
+	<main>
+		<hgroup>
+			<h1>Reports</h1>
+		</hgroup>
+
+      <table>
+        <tr>
+          <th>Level</th>
+          <th>Title</th>
+          <th>Age</th>
+          <th>Incidents</th>
+        </tr>
+        {{ range $k, $v := .Entries  }}
+        <tr>
+		<td class="level-{{ $v.GetLogLevel }}">
+			{{ $v.GetLogLevel }}
+		</td>
+		<td><a href="/issues/{{ $v.GetId }}">{{ $v.GetMessage }}</a></td>
+		<td class="tt">{{ $v.GetTime }}</td>
+		<td>
+			<table class="spark charts-css column hide-data">
+				<tbody>
+					{{ range $q := $v.GetHistogram12h }}
+					<tr><td style="--size:{{ $q }};"><span class="data"> {{ $q }} </span></td></tr>
+					{{ end }}
+				</tbody>
+			</table>
+		</td>
+        </tr>
+        {{ end }}
+      </table>
+	<script>
+		document.querySelectorAll('.tt').forEach(el => {
+			el.textContent = moment(el.textContent).fromNow();
+		});
+	</script>
+
+    </main>
+
+  </body>
+</html>
+

@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"compress/gzip"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -10,6 +11,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"text/template"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -18,90 +20,58 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-type SentryHeaderSdk struct {
-	Name    string `json:"name"`
-	Version string `json:"version"`
+func indexPage(w http.ResponseWriter, r *http.Request) {
+	list_tpl_text, err := os.ReadFile("list.html")
+
+	entries := GroupMain()
+
+	type Zzz struct {
+		Entries []LogEntry
+	}
+
+	zzz := Zzz{Entries: entries}
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	list_tpl, err := template.New("list").Parse(string(list_tpl_text))
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	err = list_tpl.Execute(w, zzz)
+	if err != nil {
+		fmt.Println(err)
+	}
 }
 
-type SentryHeaderTrace struct {
-	Environment string `json:"environment"`
-	Release     string `json:"release"`
-	Public_key  string `json:"public_key"`
-	Trace_id    string `json:"trace_id"`
-}
-type SentryHeader struct {
-	Event_id string            `json:"event_id"`
-	Sent_at  string            `json:"sent_at"`
-	Sdk      SentryHeaderSdk   `json:"sdk"`
-	Trace    SentryHeaderTrace `json:"trace"`
-}
+func issuePage(w http.ResponseWriter, r *http.Request) {
+	msg := chi.URLParam(r, "msg")
+	// base64 decode
+	msg_bytes, err := base64.StdEncoding.DecodeString(msg)
 
-type SentryEnvelope struct {
-	Type string `json:"type"`
-}
+	list_tpl_text, err := os.ReadFile("show.html")
+	entries := aggregateIdenticalMessages(string(msg_bytes), 24)
 
-type SentryBreadcrumb struct {
-	Category  string `json:"category"`
-	Level     string `json:"level"`
-	Message   string `json:"message"`
-	Type      string `json:"type"`
-	Timestamp string `json:"timestamp"`
-}
+	type Zzy struct {
+		Entry LogEntry
+		Message string
+	}
 
-type SentryBreadcrumbContainer struct {
-	Values []SentryBreadcrumb `json:"values"`
-}
+	zzz := Zzy{Entry: entries, Message: string(msg_bytes)}
 
-type SentryRequest struct {
-	Url     string            `json:"url"`
-	Headers map[string]string `json:"headers"`
-}
+	if err != nil {
+		fmt.Println(err)
+	}
+	list_tpl, err := template.New("show").Parse(string(list_tpl_text))
+	if err != nil {
+		fmt.Println(err)
+	}
 
-type SentryStackTraceFrame struct {
-	Filename string `json:"filename"`
-	Function string `json:"function"`
-	InApp    bool   `json:"in_app"`
-	Lineno   int    `json:"lineno"`
-	Colno    int    `json:"colno"`
-}
-
-type SentryStackTrace struct {
-	Frames []SentryStackTraceFrame `json:"frames"`
-}
-
-type SentryExceptionItem struct {
-	Type       string           `json:"type"`
-	Value      string           `json:"value"`
-	Stacktrace SentryStackTrace `json:"stacktrace"`
-}
-
-type SentryException struct {
-	Values []SentryExceptionItem `json:"values"`
-}
-
-type SentryLogEntry struct {
-	Message string   `json:"message"`
-	Params  []string `json:"params"`
-}
-
-type SentryEvent struct {
-	Message    string                 `json:"message"`
-	Level      string                 `json:"level"`
-	Logger     string                 `json:"logger"`
-	LogEntry   SentryLogEntry         `json:"logentry"`
-	Event_id   string                 `json:"event_id"`
-	Timestamp  interface{}            `json:"timestamp"`
-	Contexts   map[string]interface{} `json:"contexts"`
-	Extra      map[string]interface{} `json:"extra"`
-	Exception  SentryException        `json:"exception"`
-	Stacktrace SentryStackTrace       `json:"stacktrace"`
-	// Breadcrumbs  []SentryBreadcrumb `json:"breadcrumbs"`
-	Modules     map[string]string `json:"modules"`
-	Release     string            `json:"release"`
-	Environment string            `json:"environment"`
-	Server_name string            `json:"server_name"`
-	Platform    string            `json:"platform"`
-	Request     SentryRequest     `json:"request"`
+	err = list_tpl.Execute(w, zzz)
+	if err != nil {
+		fmt.Println(err)
+	}
 }
 
 func processSentryRequest(w http.ResponseWriter, r *http.Request) {
@@ -274,9 +244,9 @@ func main() {
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
 
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("welcome"))
-	})
+	r.Get("/", indexPage)
+
+	r.Get("/issues/{msg}", issuePage)
 
 	r.Post("/api/{projectID}/envelope/", func(w http.ResponseWriter, r *http.Request) {
 		processSentryRequest(w, r)

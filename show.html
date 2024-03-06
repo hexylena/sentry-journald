@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Sentry Journald</title>
+    <link rel="stylesheet" href="https://unpkg.com/normalize.css@8.0.1/normalize.css">
+    <link rel="stylesheet" href="https://unpkg.com/concrete.css@2.0.3/concrete.css">
+    <link rel="stylesheet" href="https://unpkg.com/charts.css/dist/charts.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+	main, header {
+		margin: auto;
+		max-width: 80%;
+		padding: 0 1rem;
+		width: 100%;
+	}
+	header {
+		padding: 3rem 0;
+	}
+	pre {
+		white-space: pre-wrap;
+	}
+	#meta {
+		--labels-size: 22rem;
+		--aspect-ratio: 9/1;
+	}
+
+ /* The snackbar - position it at the bottom and in the middle of the screen */
+#snackbar {
+  visibility: hidden; /* Hidden by default. Visible on click */
+  min-width: 250px; /* Set a default minimum width */
+  margin-left: -125px; /* Divide value of min-width by 2 */
+  background-color: #333; /* Black background color */
+  color: #fff; /* White text color */
+  text-align: center; /* Centered text */
+  border-radius: 2px; /* Rounded borders */
+  padding: 16px; /* Padding */
+  position: fixed; /* Sit on top of the screen */
+  z-index: 1; /* Add a z-index if needed */
+  left: 50%; /* Center the snackbar */
+  bottom: 30px; /* 30px from the bottom */
+}
+
+/* Show the snackbar when clicking on a button (class added with JavaScript) */
+#snackbar.show {
+  visibility: visible; /* Show the snackbar */
+  /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+  However, delay the fade out process for 2.5 seconds */
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+/* Animations to fade the snackbar in and out */
+@-webkit-keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+} 
+    </style>
+  </head>
+  <body>
+	<header>
+		<a href="/">Sentry-Journald</a>
+	</header>
+	<main>
+		<hgroup>
+			<h1>{{ .Entry.GetLogLevel }}</h1>
+		</hgroup>
+
+	<pre>{{ .Message }}</pre>
+
+	<section>
+		<h2>Tags</h2>
+		<table id="meta" class="charts-css bar show-heading show-labels show-primary-axis show-5-secondary-axes data-spacing-5 multiple stacked">
+			<tbody>
+				<tr>
+					<th scope="row"> Dist </th>
+					{{ range $k, $v := .Entry.GetMeta "SENTRY_DIST" }}
+					<td style="--size:{{ $v }};"> <span class="data"> {{ $k }} </span> <span class="tooltip"> {{ $k }} </span> </td> 
+					{{ end }}
+				</tr> 
+				<tr>
+					<th scope="row"> Env </th>
+					{{ range $k, $v := .Entry.GetMeta "SENTRY_ENVIRONMENT" }}
+					<td style="--size:{{ $v }};"> <span class="data"> {{ $k }} </span> </td> 
+					{{ end }}
+				</tr> 
+			</tbody>
+		</table>
+
+		<h2>Browser</h2>
+		<table id="meta" class="charts-css bar show-heading show-labels show-primary-axis show-5-secondary-axes data-spacing-5 multiple stacked">
+			<tbody>
+				<tr>
+					<th scope="row"> Browser </th>
+					{{ range $k, $v := .Entry.GetBrowserMeta "browser" }}
+					<td style="--size:{{ $v }};"> <span class="data"> {{ $k }} </span> <span class="tooltip"> {{ $k }} </span> </td> 
+					{{ end }}
+				</tr> 
+				<tr>
+					<th scope="row"> Version </th>
+					{{ range $k, $v := .Entry.GetBrowserMeta "version" }}
+					<td style="--size:{{ $v }};"> <span class="data"> {{ $k }} </span> <span class="tooltip"> {{ $k }} </span> </td> 
+					{{ end }}
+				</tr> 
+
+				<tr>
+					<th scope="row"> OS </th>
+					{{ range $k, $v := .Entry.GetBrowserMeta "os" }}
+					<td style="--size:{{ $v }};"> <span class="data"> {{ $v }} </span> <span class="tooltip"> {{ $k }} </span> </td> 
+					{{ end }}
+				</tr> 
+			</tbody>
+		</table>
+
+		<h2>Sentry</h2>
+		<table id="meta" class="charts-css bar show-heading show-labels show-primary-axis show-5-secondary-axes data-spacing-5 multiple stacked">
+			<tbody>
+				<tr>
+					<th scope="row"> Client </th>
+					{{ range $k, $v := .Entry.GetMeta "SENTRY_CLIENT" }}
+					<td style="--size:{{ $v }};"> <span class="data"> {{ $k }} </span> <span class="tooltip"> {{ $k }} </span> </td> 
+					{{ end }}
+				</tr> 
+				<tr>
+					<th scope="row"> Key </th>
+					{{ range $k, $v := .Entry.GetMeta "SENTRY_KEY" }}
+					<td style="--size:{{ $v }};"> <span class="data"> {{ $k }} </span> </td> 
+					{{ end }}
+				</tr> 
+				<tr>
+					<th scope="row"> Server Name </th>
+					{{ range $k, $v := .Entry.GetMeta "SENTRY_SERVER_NAME" }}
+					<td style="--size:{{ $v }};"> <span class="data"> {{ $k }} </span> </td> 
+					{{ end }}
+				</tr> 
+			</tbody>
+		</table>
+	</section>
+
+	<h2>Reports</h2>
+	<table>
+		<tr>
+			<th>Level</th>
+			<th>ID</th>
+			<th>Remote</th>
+			<th>Request</th>
+			<th>URL</th>
+			<th>Reporter</th>
+			<th>Distribution</th>
+			<th>Env</th>
+			<th>Age</th>
+		</tr>
+		{{ range $k, $v := .Entry.Entries}}
+		<tr>
+			<td>
+				<button  onclick="copyContent('journalctl -o json MESSAGE_ID={{ $v.GetField "MESSAGE_ID" }} | jq -S')">
+					{{ $v.GetField "MESSAGE_ID" }}
+				</button>
+			</td>
+			<td>{{ $v.GetLogLevel }}</td>
+			<td>{{ $v.GetField "REMOTE_ADDR" }}</td>
+			<td>{{ $v.GetField "REQUEST_METHOD" }}</td>
+			<td>
+				<a href="{{ $v.GetField "REQUEST_URL" }}">
+					{{ $v.GetField "REQUEST_URL" }}
+				</a>
+			</td>
+			<td>{{ $v.GetField "SENTRY_PLATFORM" }}</td>
+			<td>{{ $v.GetField "SENTRY_DIST" }}</td>
+			<td>{{ $v.GetField "SENTRY_ENVIRONMENT" }}</td>
+			<td class="tt">{{ $v.GetTime }}</td>
+		</tr>
+		{{ end }}
+	</table>
+
+	<div id="snackbar">Copied</div>
+	<script>
+		document.querySelectorAll('.tt').forEach(el => {
+			el.textContent = moment(el.textContent).fromNow();
+		});
+
+copyContent = async (text) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      console.log('Content copied to clipboard');
+	    // Get the snackbar DIV
+  var x = document.getElementById("snackbar");
+
+  // Add the "show" class to DIV
+  x.className = "show";
+
+  // After 3 seconds, remove the show class from DIV
+  setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+    } catch (err) {
+      console.error('Failed to copy: ', err);
+    }
+  }
+	</script>
+    </main>
+
+  </body>
+</html>
+
