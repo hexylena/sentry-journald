@@ -1,4 +1,4 @@
-sentry-journald:
+sentry-journald: $(wildcard *.go) $(wildcard templates/*)
 	go build
 
 fmt:

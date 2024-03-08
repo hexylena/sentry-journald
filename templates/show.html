@@ -197,6 +197,7 @@
 			<th>Remote</th>
 			<th>Request</th>
 			<th>URL</th>
+			<th>Server</th>
 			<th>Reporter</th>
 			<th>Distribution</th>
 			<th>Env</th>
@@ -217,6 +218,7 @@
 					{{ $v.GetField "REQUEST_URL" }}
 				</a>
 			</td>
+			<td>{{ $v.GetField "SENTRY_SERVER_NAME" }}</td>
 			<td>{{ $v.GetField "SENTRY_PLATFORM" }}</td>
 			<td>{{ $v.GetField "SENTRY_DIST" }}</td>
 			<td>{{ $v.GetField "SENTRY_ENVIRONMENT" }}</td>
