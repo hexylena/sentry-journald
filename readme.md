@@ -72,7 +72,7 @@ Overview | Detail (JS) | Detail (Py)
 
 ## Did you find this useful?
 
-Please let me know (email, fediverse are both fine.)
+Please let me know! (matrix/email/fediverse are all fine.)
 
 ## License
 
