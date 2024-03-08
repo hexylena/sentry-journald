@@ -1,7 +1,7 @@
 # Sentry-Journald
 
 Do you like sentry's data collection, but don't want to run a complicated sentry server? Do you still want to see those cute lil error messages?
-Boy howdy do I have the 300 lines of rubbish Golang code for you!
+Boy howdy do I have the 800 lines of rubbish Golang code for you!
 
 ```
 $ journalctl -f # optionally -t sentry
@@ -10,30 +10,33 @@ Mar 06 13:13:51 w-galaxy sentry[467887]: [event] (proj=py-demo env=development) 
 Mar 06 13:13:51 w-galaxy sentry[467887]: [event] (proj=py-demo env=development) Something went wrong
 ```
 
-If you want the full data it's stuffed into additional fields in the `journald` json output.
+If you want the full data it's stuffed into additional fields in the `journald -o json` format.
 
 ```json
 {
-  "MESSAGE": "[event] (proj=web-demo env=production) [http://localhost:4001/test.html:38:5] [http://localhost:4001/test.html:1:1] ReferenceError: someOtherFunction is not defined",
-  "MESSAGE_ID": "2b5238a100474170b7bb6bd78fc8842f",
+  "MESSAGE": "[event] (proj=my-python-project env=staging) [sentry-test.py:36:0] [sentry-test.py:39:0] [sentry-test.py:42:0]  NameError: name 'a_certainly_failing_function' is not defined",
+  "MESSAGE_ID": "1f53e8bc372f44cf9ae25b576135d6df",
   "PRIORITY": "3",
   "PROJECT_ID": "1",
-  "REMOTE_ADDR": "127.0.0.1:57516",
-  "REQUEST_HEADERS": "{\"User-Agent\":\"Mozilla/5.0 (X11; Linux x86_64; rv:122.0) Gecko/20100101 Firefox/122.0\"}",
+  "REMOTE_ADDR": "[::1]:59970",
+  "REQUEST_HEADERS": "null",
   "REQUEST_METHOD": "POST",
-  "REQUEST_REMOTE_ADDR": "127.0.0.1:57516",
-  "REQUEST_URL": "http://localhost:4001/test.html",
-  "SENTRY_CLIENT": "sentry.javascript.browser/7.105.0",
-  "SENTRY_CONTEXTS": "{\"trace\":{\"span_id\":\"a091418210b527fc\",\"trace_id\":\"64c9cb5312174c04be784ebdd66d094e\"}}",
-  "SENTRY_DIST": "my-project-name@2.3.12",
-  "SENTRY_ENVIRONMENT": "production",
-  "SENTRY_KEY": "password",
-  "SENTRY_PLATFORM": "javascript",
-  "SENTRY_RELEASE": "my-project-name@2.3.12",                                                                                                                                                                   "SENTRY_SERVER_NAME": "",
-  "SENTRY_TIMESTAMP": "1.709726111276e+09",
+  "REQUEST_REMOTE_ADDR": "[::1]:59970",
+  "REQUEST_URL": "",
+  "SENTRY_CLIENT": "sentry.python/1.41.0",
+  "SENTRY_CONTEXTS": "{\"level\":\"info\",\"runtime\":{\"build\":\"3.11.7 (main, Dec 18 2023, 00:00:00) [GCC 13.2.1 20231011 (Red Hat 13.2.1-4)]\",\"name\":\"CPython\",\"version\":\"3.11.7\"},\"trace\":{\"parent_span_id\":null,\"span_id\":\"bc764aa57d129744\",\"trace_id\":\"6e80e23f63f54be4b1871e55e7e01ed6\"},\"user\":\"hexylena\"}",
+  "SENTRY_DIST": "myapp@0.0.1",
+  "SENTRY_ENVIRONMENT": "staging",
+  "SENTRY_KEY": "my-python-project",
+  "SENTRY_MESSAGE_KEY": "(proj=my-python-project) NameError: name 'a_certainly_failing_function' is not defined",
+  "SENTRY_PLATFORM": "python",
+  "SENTRY_RELEASE": "myapp@0.0.1",
+  "SENTRY_SERVER_NAME": "w-galaxy",
+  "SENTRY_STACKTRACE": "{\"frames\":[{\"filename\":\"sentry-test.py\",\"function\":\"\\u003cmodule\\u003e\",\"in_app\":true,\"lineno\":42,\"colno\":0},{\"filename\":\"sentry-test.py\",\"function\":\"a\",\"in_app\":true,\"lineno\":39,\"colno\":0},{\"filename\":\"sentry-test.py\",\"function\":\"b\",\"in_app\":true,\"lineno\":36,\"colno\":0}]}",
+  "SENTRY_TIMESTAMP": "2024-03-08T10:32:05.887578Z",
   "SENTRY_VERSION": "7",
   "SYSLOG_IDENTIFIER": "sentry",
-},
+}
 ```
 
 ## Configuration
