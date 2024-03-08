@@ -66,3 +66,12 @@ func issuePage(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 	}
 }
+
+func testPage(w http.ResponseWriter, r *http.Request) {
+	contents, err := content.ReadFile("templates/test.html")
+	// static file no templateig needed
+	if err != nil {
+		fmt.Println(err)
+	}
+	w.Write(contents)
+}

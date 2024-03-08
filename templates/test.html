@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Sentry Test Page</title>
+  <head>
+    <meta charset="utf-8">
+    <title>Sentry Journald</title>
+    <link rel="stylesheet" href="https://unpkg.com/normalize.css@8.0.1/normalize.css">
+    <link rel="stylesheet" href="https://unpkg.com/concrete.css@2.0.3/concrete.css">
+    <link rel="stylesheet" href="https://unpkg.com/charts.css/dist/charts.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 		<script
 			  src="https://browser.sentry-cdn.com/7.105.0/bundle.tracing.min.js"
 			  integrity="sha384-XFfw9fN0ZxeLnveKcWT/zLOcibWw9ewRfNiUu/teAuMfP4G3Oy7lLh7rN3rX2T7M"
@@ -30,21 +35,28 @@
 		    replaysOnErrorSampleRate: 1,
 		  });
 		</script>
-
-	</head>
-	<body>
-		<script>
-			function doesNotExist(){
-				someOtherFunction();
-			}
-		</script>
-
+  </head>
+  <body>
+	<header>
+		<a href="/">Sentry-Journald</a>
+	</header>
+	<main>
+		<hgroup>
+			<h1>Sentry Testing Page</h1>
+		</hgroup>
 
 		<button onclick="doesNotExist()">Trigger Exception</button>
 		<button onclick="throw new Error('My Error')">Throw new Error</button>
 		<button onclick="Sentry.captureMessage('My Message')">Capture Message</button>
 		<button onclick="Sentry.captureException(new Error('My Error'))">Capture Exception</button>
 		<button onclick="Sentry.captureEvent({ message: 'My Event' })">Capture Event</button>
+    </main>
 
-	</body>
+		<script>
+			function doesNotExist(){
+				someOtherFunction();
+			}
+		</script>
+  </body>
 </html>
+

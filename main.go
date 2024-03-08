@@ -29,6 +29,8 @@ func main() {
 
 	r.Get("/", indexPage)
 
+	r.Get("/test", testPage)
+
 	r.Get("/issues/{msg}", issuePage)
 
 	r.Post("/api/{projectID}/envelope/", func(w http.ResponseWriter, r *http.Request) {
