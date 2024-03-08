@@ -4,14 +4,17 @@ import (
 	"encoding/base64"
 	"fmt"
 	"net/http"
-	"os"
 	"text/template"
 
 	"github.com/go-chi/chi/v5"
+	"embed"
 )
 
+//go:embed templates
+var content embed.FS
+
 func indexPage(w http.ResponseWriter, r *http.Request) {
-	list_tpl_text, err := os.ReadFile("list.html")
+	list_tpl_text, err := content.ReadFile("templates/list.html")
 
 	entries := GroupMain()
 
@@ -40,7 +43,7 @@ func issuePage(w http.ResponseWriter, r *http.Request) {
 	// base64 decode
 	msg_bytes, err := base64.StdEncoding.DecodeString(msg)
 
-	list_tpl_text, err := os.ReadFile("show.html")
+	list_tpl_text, err := content.ReadFile("templates/show.html")
 	entries := aggregateIdenticalMessages(string(msg_bytes), 24)
 
 	type Zzy struct {
