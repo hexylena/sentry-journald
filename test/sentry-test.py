@@ -3,12 +3,13 @@ import random
 from sentry_sdk import capture_exception
 from sentry_sdk import capture_message
 from sentry_sdk import add_breadcrumb
+from sentry_sdk import set_user
 
 
 n = random.choice([1, 1, 1, 1, 1, 2, 2, 3])
 
 sentry_sdk.init(
-    dsn="http://gtn-py@localhost:8000/1",
+    dsn="http://my-python-project@localhost:8000/1",
     # Enable performance monitoring
     enable_tracing=True,
     send_default_pii=True,
@@ -16,21 +17,23 @@ sentry_sdk.init(
     release=f"myapp@0.0.{n}"
 )
 
+# These are not currently supported
 add_breadcrumb(
     category='auth',
     message='Authenticated user %s' % 'hexylena',
     level='info',
 )
 
-sentry_sdk.set_context("character", {
-    "name": "Mighty Fighter",
-    "age": 19,
-    "attack_type": "melee"
-})
+# This is though!
+sentry_sdk.set_context("user", "hexylena")
+sentry_sdk.set_context("level", "info")
+
+# Also
+set_user({"username": "hexylena", "email": "jane.doe@example.com"})
 
 
 def b():
-    a_potentially_failing_function()
+    a_certainly_failing_function()
 
 def a():
     b()
