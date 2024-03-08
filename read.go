@@ -20,7 +20,7 @@ func aggregateIdenticalMessages(msg string, hours int) LogEntry {
 	}
 	defer j.Close()
 
-	err = j.AddMatch("MESSAGE=" + msg)
+	err = j.AddMatch("SENTRY_MESSAGE_KEY=" + msg)
 	if err != nil {
 		panic(err)
 	}
@@ -91,7 +91,7 @@ func GroupMain() []LogEntry {
 	grouped := make(map[string]LogEntry)
 
 	for _, entry := range entries {
-		k := entry.E.Fields["MESSAGE"]
+		k := entry.E.Fields["SENTRY_MESSAGE_KEY"]
 
 		ref, found := grouped[k]
 		if !found {

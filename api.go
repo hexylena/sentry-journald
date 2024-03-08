@@ -121,6 +121,7 @@ func processSentryRequest(w http.ResponseWriter, r *http.Request) {
 	journal_metadata["SENTRY_CONTEXTS"], _ = json.Marshal(event2.Contexts)
 
 	var message string
+	stacktrace := ""
 	if event2.Message != "" {
 		message = event2.Message
 	} else if event2.LogEntry.Message != "" {
@@ -135,14 +136,17 @@ func processSentryRequest(w http.ResponseWriter, r *http.Request) {
 
 			// Prepend the stacktrace
 			for _, frame := range value.Stacktrace.Frames {
-				message = fmt.Sprintf("[%s:%d:%d] %s",
-					frame.Filename, frame.Lineno, frame.Colno, message)
+				stacktrace = fmt.Sprintf("[%s:%d:%d] %s",
+					frame.Filename, frame.Lineno, frame.Colno, stacktrace)
 			}
 		}
 	}
 
 	var log_message string
-	log_message = fmt.Sprintf("[%s] (proj=%s env=%s) %s", msg_type.Type, sentry_key, event2.Environment, message)
+	// What we print to the logs needs to include more useful information
+	log_message = fmt.Sprintf("[%s] (proj=%s env=%s) %s %s", msg_type.Type, sentry_key, event2.Environment, stacktrace, message)
+	// But what we'll use to de-duplicate, should only include the bare minimum
+	journal_metadata["SENTRY_MESSAGE_KEY"] = fmt.Sprintf("(proj=%s) %s", sentry_key, message)
 	// if there's a release, add it to the message
 
 	var log_level journald.Priority

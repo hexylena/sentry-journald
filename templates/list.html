@@ -54,6 +54,7 @@
       <table>
         <tr>
           <th>Level</th>
+          <th>Project</th>
           <th>Title</th>
           <th>Age</th>
           <th>Incidents</th>
@@ -63,7 +64,8 @@
 		<td class="level-{{ $v.GetLogLevel }}">
 			{{ $v.GetLogLevel }}
 		</td>
-		<td><a href="/issues/{{ $v.GetId }}">{{ $v.GetMessage }}</a></td>
+		<td>{{ $v.GetProject }}</td>
+		<td><a href="/issues/{{ $v.GetId }}">{{ $v.GetMessageKey }}</a></td>
 		<td class="tt">{{ $v.GetTime }}</td>
 		<td>
 			<table class="spark charts-css column hide-data">

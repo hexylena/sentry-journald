@@ -51,12 +51,28 @@ type LogEntry struct {
 	Id       string
 }
 
+func (j LogEntry) EntriesReverse() []*JournalEntry {
+	var entries []*JournalEntry
+	for i := len(j.Entries) - 1; i >= 0; i-- {
+		entries = append(entries, j.Entries[i])
+	}
+	return entries
+}
+
 func (j LogEntry) GetTime() string {
 	return j.LastSeen.Format(time.RFC3339)
 }
 
+func (e LogEntry) GetProject() string {
+	return e.Entries[0].E.Fields["SENTRY_KEY"]
+}
+
 func (e LogEntry) GetMessage() string {
 	return e.Entries[0].E.Fields["MESSAGE"]
+}
+
+func (e LogEntry) GetMessageKey() string {
+	return e.Entries[0].E.Fields["SENTRY_MESSAGE_KEY"]
 }
 
 func (e LogEntry) HasStacktrace() bool {
@@ -71,7 +87,7 @@ func (e LogEntry) GetStacktrace() SentryStackTrace {
 }
 
 func (e LogEntry) GetId() string {
-	m := e.GetMessage()
+	m := e.GetMessageKey()
 	// base64 encode this:
 	return base64.StdEncoding.EncodeToString([]byte(m))
 }

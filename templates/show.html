@@ -202,7 +202,7 @@
 			<th>Env</th>
 			<th>Age</th>
 		</tr>
-		{{ range $k, $v := .Entry.Entries}}
+		{{ range $k, $v := .Entry.EntriesReverse }}
 		<tr>
 			<td>
 				<button  onclick="copyContent('journalctl -o json MESSAGE_ID={{ $v.GetField "MESSAGE_ID" }} | jq -S')">
