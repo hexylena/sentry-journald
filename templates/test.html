@@ -7,6 +7,40 @@
     <link rel="stylesheet" href="https://unpkg.com/concrete.css@2.0.3/concrete.css">
     <link rel="stylesheet" href="https://unpkg.com/charts.css/dist/charts.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+	main, header {
+		margin: auto;
+		max-width: 80%;
+		padding: 0 1rem;
+		width: 100%;
+	}
+	header {
+		padding: 3rem 0;
+	}
+	pre {
+		white-space: pre-wrap;
+	}
+	#meta {
+		--labels-size: 22rem;
+		--aspect-ratio: 9/1;
+	}
+	.spark {
+		border-bottom: 1px solid black
+	}
+	.spark {
+		--color: #ccf;
+	}
+
+.level-Emergency::before {content: "🔥"}
+.level-Alert::before {content: "🔥"}
+.level-Critical::before {content: "❌"}
+.level-Error::before {content: "❌"}
+.level-Warning::before {content: "⚠️"}
+.level-Notice::before {content: "ℹ️"}
+.level-Informational::before {content: "💬"}
+.level-Debug::before {content: "💬"}
+
+    </style>
 		<script
 			  src="https://browser.sentry-cdn.com/7.105.0/bundle.tracing.min.js"
 			  integrity="sha384-XFfw9fN0ZxeLnveKcWT/zLOcibWw9ewRfNiUu/teAuMfP4G3Oy7lLh7rN3rX2T7M"
