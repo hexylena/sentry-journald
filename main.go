@@ -192,6 +192,8 @@ func processSentryRequest(w http.ResponseWriter, r *http.Request) {
 			value := event2.Exception.Values[0]
 			message = fmt.Sprintf("%s: %s", value.Type, value.Value)
 
+			journal_metadata["SENTRY_STACKTRACE"], _ = json.Marshal(value.Stacktrace)
+
 			// Prepend the stacktrace
 			for _, frame := range value.Stacktrace.Frames {
 				message = fmt.Sprintf("[%s:%d:%d] %s",
