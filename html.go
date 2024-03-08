@@ -203,11 +203,39 @@ func (e LogEntry) GetStringyContextKeys() []string {
 	res := make([]string, 0)
 	for k, _ := range context_keys {
 		if context_keys[k] == "" {
+			// maybe re-parse/serialise as a json string?
 			continue
 		}
 		res = append(res, k)
 	}
 	return res
+}
+
+func (e LogEntry) GetContextDistribution(attr string) map[string]float64 {
+	browsers := make(map[string]int)
+	for _, entry := range e.Entries {
+		context_keys := make(map[string]string)
+		json.Unmarshal([]byte(entry.E.Fields["SENTRY_CONTEXTS"]), &context_keys)
+		k := context_keys[attr]
+
+		if _, ok := browsers[k]; ok {
+			browsers[k] = browsers[k] + 1
+		} else {
+			browsers[k] = 1
+		}
+	}
+
+	// convert to percentages
+	total := len(e.Entries)
+	results := make(map[string]float64)
+	for k, v := range browsers {
+		if k == "" {
+			continue
+		}
+		results[k] = float64(v) / float64(total)
+	}
+
+	return results
 }
 
 type ByAge []LogEntry

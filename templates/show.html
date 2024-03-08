@@ -186,7 +186,14 @@
 					{{ end }}
 				</tr>
 
-				{{ .Entry.GetStringyContextKeys}}
+				{{ range $k := .Entry.GetStringyContextKeys }}
+				<tr>
+					<th scope="row"> {{ $k }} </th>
+					{{ range $k2, $v := $.Entry.GetContextDistribution $k }}
+					<td style="--size:{{ $v }};"> <span class="data"> {{ $k2 }} </span> </td> 
+					{{ end }}
+				</tr>
+				{{ end }}
 			</tbody>
 		</table>
 	</section>
