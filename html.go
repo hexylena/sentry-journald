@@ -44,6 +44,7 @@ func (j JournalEntry) GetLogLevel() string {
 	return "UNKNOWN"
 }
 
+// These are a collection of journal entries.
 type LogEntry struct {
 	LastSeen time.Time
 	Entries  []*JournalEntry
@@ -56,6 +57,17 @@ func (j LogEntry) GetTime() string {
 
 func (e LogEntry) GetMessage() string {
 	return e.Entries[0].E.Fields["MESSAGE"]
+}
+
+func (e LogEntry) HasStacktrace() bool {
+	_, ok := e.Entries[0].E.Fields["SENTRY_STACKTRACE"]
+	return ok
+}
+
+func (e LogEntry) GetStacktrace() SentryStackTrace {
+	var s SentryStackTrace
+	json.Unmarshal([]byte(e.Entries[0].E.Fields["SENTRY_STACKTRACE"]), &s)
+	return s
 }
 
 func (e LogEntry) GetId() string {

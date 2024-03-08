@@ -98,6 +98,28 @@
 
 	<pre>{{ .Message }}</pre>
 
+	{{ if .Entry.HasStacktrace }}
+	<h2>Stacktrace</h2>
+	<table>
+		<thead>
+			<tr>
+				<th>Location</th>
+				<th>Function</th>
+				<th>In App</th>
+			</tr>
+		</thead>
+		<tbody>
+	{{ range $k, $v := .Entry.GetStacktrace.Frames }}
+		<tr>
+			<td>{{ $v.Filename }}:{{ $v.Lineno }}:{{ $v.Colno }}</td>
+			<td>{{ $v.Function }}</td>
+			<td>{{ $v.InApp }}</td>
+		</tr>
+	{{ end }}
+		</tbody>
+	</table>
+	{{ end }}
+
 	<section>
 		<h2>Tags</h2>
 		<table id="meta" class="charts-css bar show-heading show-labels show-primary-axis show-5-secondary-axes data-spacing-5 multiple stacked">
