@@ -184,7 +184,9 @@
 					{{ range $k, $v := .Entry.GetMeta "SENTRY_SERVER_NAME" }}
 					<td style="--size:{{ $v }};"> <span class="data"> {{ $k }} </span> </td> 
 					{{ end }}
-				</tr> 
+				</tr>
+
+				{{ .Entry.GetStringyContextKeys}}
 			</tbody>
 		</table>
 	</section>

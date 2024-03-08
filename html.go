@@ -196,6 +196,20 @@ func (e LogEntry) GetHistogram12h() []float64 {
 	return results
 }
 
+func (e LogEntry) GetStringyContextKeys() []string {
+	context_keys := make(map[string]string)
+	json.Unmarshal([]byte(e.Entries[0].E.Fields["SENTRY_CONTEXTS"]), &context_keys)
+
+	res := make([]string, 0)
+	for k, _ := range context_keys {
+		if context_keys[k] == "" {
+			continue
+		}
+		res = append(res, k)
+	}
+	return res
+}
+
 type ByAge []LogEntry
 
 func (a ByAge) Len() int           { return len(a) }
