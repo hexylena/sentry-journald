@@ -135,7 +135,6 @@ func (e LogEntry) GetBrowserMeta(attr string) map[string]float64 {
 		results[k] = float64(v) / float64(total)
 	}
 
-	fmt.Println(results)
 	return results
 }
 
@@ -158,7 +157,6 @@ func (e LogEntry) GetMeta(attr string) map[string]float64 {
 		if k == "" {
 			continue
 		}
-		fmt.Printf("k=%s v=%s.\n", k, v)
 		results[k] = float64(v) / float64(total)
 	}
 
