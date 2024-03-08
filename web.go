@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"text/template"
 
-	"github.com/go-chi/chi/v5"
 	"embed"
+	"github.com/go-chi/chi/v5"
 )
 
 //go:embed templates

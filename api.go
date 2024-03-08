@@ -13,6 +13,9 @@ import (
 	"github.com/ssgreg/journald"
 )
 
+// TODO: make toggleable.
+var DEBUG bool
+
 func processSentryRequest(w http.ResponseWriter, r *http.Request) {
 	projectID := chi.URLParam(r, "projectID")
 	// These can be provided here,
@@ -95,6 +98,11 @@ func processSentryRequest(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal(v[2], &event2)
 	if err != nil {
 		http.Error(w, "Error parsing event", http.StatusBadRequest)
+	}
+
+	if DEBUG {
+		fmt.Printf("Received %s event\n", msg_type.Type)
+		fmt.Println(string(v[2]))
 	}
 
 	journal_metadata := map[string]interface{}{
